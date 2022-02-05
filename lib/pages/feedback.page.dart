@@ -115,11 +115,12 @@ class _FeedbackContactState extends State<FeedbackContact> {
                                 'Message or Feedback sent successfully !! \n(सन्देश वा प्रतिक्रिया सफलतापूर्वक पठाइयो !!)'),
                             actions: [
                               TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text('Ok (ठिक छ)'))
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                                child: Text('Ok (ठिक छ)'),
+                              )
                             ],
                           ),
                         );

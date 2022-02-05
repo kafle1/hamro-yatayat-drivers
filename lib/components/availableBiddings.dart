@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:yatayat_drivers_app/pages/createBidding.dart';
+import 'package:yatayat_drivers_app/pages/webview.page.dart';
 import 'package:yatayat_drivers_app/shared/constants.shared.dart';
 
 class ShowAvailableBiddings extends StatefulWidget {
@@ -19,6 +20,7 @@ class _ShowAvailableBiddingsState extends State<ShowAvailableBiddings> {
       .instance
       .collection('availableBiddings')
       .where('vehicleType', whereIn: vehicles)
+      .orderBy('bookingDate', descending: true)
       .snapshots();
 
   @override
@@ -43,11 +45,22 @@ class _ShowAvailableBiddingsState extends State<ShowAvailableBiddings> {
           children: snapshot.data!.docs.map((DocumentSnapshot document) {
             Map<String, dynamic> data =
                 document.data()! as Map<String, dynamic>;
+
             return ListTile(
+              //check if user has already added placed booking for this order
+              enabled:
+                  !GetStorage().read('driverBiddings').contains(data['id']),
               title: Text(data['vehicleType']),
               isThreeLine: true,
-              onTap: () {
-                Navigator.pushNamed(context, CreateBidding.id, arguments: data);
+              onTap: () async {
+                if (await GetStorage().read('driverPendingAmount') > 0) {
+                  //If driver has pending amount to pay
+                  Navigator.pushNamed(context, ShowWebsite.id,
+                      arguments: 'https://yatayat.netlify.app/pending-due');
+                } else {
+                  Navigator.pushNamed(context, CreateBidding.id,
+                      arguments: data);
+                }
               },
               leading: Image(
                 image: AssetImage('./assets/icons/${data['icon']}.png'),

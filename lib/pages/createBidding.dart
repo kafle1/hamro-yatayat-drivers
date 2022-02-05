@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yatayat_drivers_app/components/myButton.dart';
+import 'package:yatayat_drivers_app/services/database.services.dart';
 import 'package:yatayat_drivers_app/shared/constants.shared.dart';
 
 class CreateBidding extends StatefulWidget {
@@ -17,7 +18,9 @@ class _CreateBiddingState extends State<CreateBidding> {
   final _formKey1 = GlobalKey<FormState>();
 
   String? _priceError;
-  String? _remarksError;
+
+  //show spinner
+  bool showSpinner = false;
 
   @override
   Widget build(BuildContext context) {
@@ -29,89 +32,179 @@ class _CreateBiddingState extends State<CreateBidding> {
         title: Text('Create Bidding (नयाँ बोली)'),
         backgroundColor: kThemeColor,
       ),
-      body: SafeArea(
-          child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Create Bidding for this booking: ',
-                style: kTitleTextStyle,
-              ),
-              ListTile(
-                title: Text(data['vehicleType']),
-                isThreeLine: true,
-                onTap: () {
-                  Navigator.pushNamed(context, CreateBidding.id,
-                      arguments: data);
-                },
-                leading: Image(
-                  image: AssetImage('./assets/icons/${data['icon']}.png'),
-                ),
-                subtitle: Text(
-                    'From ${data['pickupLocation']} to ${data['destinationLocation']} (${data['noOfTrips'] == 1 ? 'One Way' : 'Two Way'}) \nPickup Date: ${data['pickupDate']} \nBooking Days: ${data['noOfDays']} days'),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Form(
-                key: _formKey,
-                child: TextField(
-                  controller: _priceController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    hintText:
-                        'Enter Final Amount (अन्तिम भाडा सुल्क लेख्नुहोस्)',
-                    labelText: 'Price',
-                    errorText: _priceError,
-                    errorMaxLines: 3,
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.payments_outlined),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Form(
-                key: _formKey1,
-                child: TextField(
-                  controller: _remarksController,
-                  decoration: InputDecoration(
-                    hintText: 'Enter Remarks (अन्य जानकारी लेख्नुहोस्)',
-                    labelText: 'Remarks',
-                    errorText: _remarksError,
-                    errorMaxLines: 3,
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(
-                      Icons.message,
+      body: showSpinner
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : SafeArea(
+              child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Create Bidding for this booking: \nयस बुकिंगको लागि बिडिङ गर्नुहोस्:',
+                      style: kTitleTextStyle,
                     ),
-                  ),
+                    ListTile(
+                      title: Text(data['vehicleType']),
+                      isThreeLine: true,
+                      onTap: () {
+                        Navigator.pushNamed(context, CreateBidding.id,
+                            arguments: data);
+                      },
+                      leading: Image(
+                        image: AssetImage('./assets/icons/${data['icon']}.png'),
+                      ),
+                      subtitle: Text(
+                          'From ${data['pickupLocation']} to ${data['destinationLocation']} (${data['noOfTrips'] == 1 ? 'One Way' : 'Two Way'}) \nPickup Date: ${data['pickupDate']} \nBooking Days: ${data['noOfDays']} days'),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Form(
+                      key: _formKey,
+                      child: TextField(
+                        controller: _priceController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          hintText:
+                              'Enter Final Amount (अन्तिम भाडा सुल्क लेख्नुहोस्)',
+                          labelText: 'Price',
+                          errorText: _priceError,
+                          errorMaxLines: 2,
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.payments_outlined),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Form(
+                      key: _formKey1,
+                      child: TextField(
+                        controller: _remarksController,
+                        decoration: InputDecoration(
+                          hintText: 'Enter Remarks (अन्य जानकारी लेख्नुहोस्)',
+                          labelText: 'Remarks',
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(
+                            Icons.message,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    MyButton(
+                        title: 'Submit Bidding (बोली पेश गर्नुहोस्)',
+                        icon: Icons.check,
+                        onClick: () {
+                          setState(() {
+                            if (_priceController.text.length < 3) {
+                              _priceError =
+                                  'Enter Valid Price (मान्य मूल्य लेख्नुहोस्)';
+                            } else {
+                              _priceError = null;
+                            }
+                          });
+
+                          if (_priceError == null) {
+                            //Create new bidding
+                            showDialog(
+                              context: context,
+                              builder: (ctxt) => AlertDialog(
+                                title: Text('Confirm Bidding ?'),
+                                content: Text(
+                                    'तपाइको बोली पेश हुन गइरहेको छ | यसपछि तपाइले भाडा रकम बदलन सक्नुहुन्न | के यो बोली पेश गर्दा हुन्छ ? '),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      'No (नगर्नुहोस्)',
+                                      style: TextStyle(color: Colors.red[900]),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      backgroundColor: Colors.green[900],
+                                    ),
+                                    onPressed: () async {
+                                      try {
+                                        //Create a new bidding
+                                        Navigator.pop(ctxt);
+                                        setState(() {
+                                          showSpinner = true;
+                                        });
+
+                                        await Database().createBidding(
+                                            price: int.parse(
+                                                _priceController.text),
+                                            remarks: _remarksController.text,
+                                            bookingId: data['id']);
+
+                                        setState(() {
+                                          showSpinner = false;
+                                        });
+                                        showDialog(
+                                          barrierDismissible: false,
+                                          context: context,
+                                          builder: (alertContext) =>
+                                              AlertDialog(
+                                            title: Text('Bidding Success !!'),
+                                            content: Text(
+                                                'You bidding has been succesfully placed. (तपाइँको बोली सफलतापूर्वक पेश भएको छ।)'),
+                                            actions: [
+                                              TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(alertContext);
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text('Ok (ठिक छ)'))
+                                            ],
+                                          ),
+                                        );
+                                      } catch (e) {
+                                        Navigator.pop(context);
+                                        showDialog(
+                                          context: context,
+                                          builder: (alertContext) =>
+                                              AlertDialog(
+                                            title: Text('Bidding Error !!'),
+                                            content: Text(
+                                                'Error occured while placing your bid. Please try again later ! (तपाईंको बोली राख्ने क्रममा त्रुटि भयो। फेरी प्रयास गर्नु होला !)'),
+                                            actions: [
+                                              TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(alertContext);
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text('Ok (ठिक छ)'))
+                                            ],
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    child: Text(
+                                      'Yes (हुन्छ)',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                        },
+                        color: Colors.green[900])
+                  ],
                 ),
               ),
-              SizedBox(
-                height: 20,
-              ),
-              MyButton(
-                  title: 'Submit Bidding (बोली पेश गर्नुहोस्)',
-                  icon: Icons.check,
-                  onClick: () {
-                    setState(() {
-                      if (_priceController.text.length < 2) {
-                        _priceError =
-                            'Enter Valid Price (मान्य मूल्य लेख्नुहोस्)';
-                      } else {
-                        _priceError = null;
-                      }
-                    });
-                  },
-                  color: Colors.green[900])
-            ],
-          ),
-        ),
-      )),
+            )),
     );
   }
 }

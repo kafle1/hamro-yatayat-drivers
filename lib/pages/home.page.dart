@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:yatayat_drivers_app/components/availableBiddings.dart';
@@ -40,8 +41,14 @@ class _HomeState extends State<Home> {
             icon: Icon(Icons.feedback),
           ),
           IconButton(
-            onPressed: () {
+            onPressed: () async {
+              //Remove cache from db
               data.remove('driverId');
+
+              //Signout the user
+              await FirebaseAuth.instance.signOut();
+
+              //Open signi page
               Navigator.popAndPushNamed(context, Signin.id);
             },
             icon: Icon(Icons.logout),

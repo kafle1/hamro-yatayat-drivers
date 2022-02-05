@@ -28,22 +28,6 @@ class _YatayatDriversState extends State<YatayatDrivers> {
   @override
   void initState() {
     super.initState();
-
-    //Get the vehicles of the driver
-    if (db.read('driverVehicles') == null) {
-      final driverId = db.read('driverId');
-      FirebaseFirestore.instance
-          .collection('drivers')
-          .doc(driverId)
-          .get()
-          .then((DocumentSnapshot documentSnapshot) {
-        if (documentSnapshot.exists) {
-          dynamic data = documentSnapshot.data();
-          //Store vehicles local db
-          db.write('driverVehicles', data['vehicleType']);
-        }
-      });
-    }
   }
 
   @override
