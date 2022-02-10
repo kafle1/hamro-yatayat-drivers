@@ -27,7 +27,7 @@ class _ShowWebsiteState extends State<ShowWebsite> {
     FocusScope.of(context).unfocus();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Hamro Yatayat Drivers'),
+        title: Text('Hamro Yatayat'),
         backgroundColor: kThemeColor,
       ),
       backgroundColor: Colors.white,

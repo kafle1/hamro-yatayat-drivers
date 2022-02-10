@@ -16,8 +16,8 @@ class _buildSheetState extends State<buildSheet> {
     Map biddingDetails = widget.data;
     return makeDismissible(
       child: DraggableScrollableSheet(
-        minChildSize: 0.4,
-        initialChildSize: 0.7,
+        minChildSize: 0.3,
+        initialChildSize: 0.6,
         builder: (_, controller) => Container(
           decoration: BoxDecoration(
             color: Colors.white,

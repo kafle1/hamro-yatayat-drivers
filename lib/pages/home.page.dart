@@ -1,9 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:yatayat_drivers_app/components/availableBiddings.dart';
 import 'package:yatayat_drivers_app/components/biddingHistoyCards.dart';
-import 'package:yatayat_drivers_app/components/myButton.dart';
 import 'package:yatayat_drivers_app/components/notices.dart';
 import 'package:yatayat_drivers_app/pages/feedback.page.dart';
 import 'package:yatayat_drivers_app/pages/signin.page.dart';
@@ -18,6 +18,59 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  @override
+  void initState() {
+    super.initState();
+
+    //Check if driver has pending amount to pay
+    FirebaseFirestore.instance
+        .collection('drivers')
+        .doc(GetStorage().read('driverId'))
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      Map? data = documentSnapshot.data() as Map;
+
+      if (data['pendingAmount'] > 0) {
+        showDialog(
+          context: context,
+          builder: (ctxt) => AlertDialog(
+            title: Text('Pending Amount Due !!'),
+            actions: [
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.green[900],
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, ShowWebsite.id,
+                      arguments: 'https://yatayat.netlify.app/pending-due');
+                },
+                child: Text(
+                  'Pay Now (अहिले तिर्नुहोस्)',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.blue[900],
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'I Will Pay Later (म पछि तिर्नेछु)',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+            content: Text(
+                'You have pending amount Rs. ${data['pendingAmount']} to pay to Yatayat, which is from your previous booking. Please pay it on time so that you can place your bid for next booking. Thank you ! \n\nतपाईंको रकम रु.${data['pendingAmount']} यातायातलाई तिर्न बाँकी छ , जुन तपाइँको अघिल्लो बुकिङबाट हो। कृपया यसलाई समयमै तिर्नुहोस् ताकि तपाइँ अर्को बुकिङको लागि आफ्नो बोली राख्न सक्नुहुन्छ। धन्यवाद !'),
+          ),
+        );
+      }
+    });
+  }
+
   final data = GetStorage();
   @override
   Widget build(BuildContext context) {
