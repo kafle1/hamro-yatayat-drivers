@@ -30,7 +30,7 @@ class _buildSheetState extends State<buildSheet> {
             controller: controller,
             children: [
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 130),
+                margin: EdgeInsets.symmetric(horizontal: 140),
                 height: 7,
                 decoration: BoxDecoration(
                     color: Colors.grey[300],

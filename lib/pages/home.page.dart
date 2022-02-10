@@ -9,6 +9,7 @@ import 'package:yatayat_drivers_app/pages/feedback.page.dart';
 import 'package:yatayat_drivers_app/pages/signin.page.dart';
 import 'package:yatayat_drivers_app/pages/webview.page.dart';
 import 'package:yatayat_drivers_app/shared/constants.shared.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -23,6 +24,7 @@ class _HomeState extends State<Home> {
     super.initState();
 
     //Check if driver has pending amount to pay
+    //If yes show a popup as a remainder to pay the due amount
     FirebaseFirestore.instance
         .collection('drivers')
         .doc(GetStorage().read('driverId'))

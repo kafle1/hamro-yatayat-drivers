@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:yatayat_drivers_app/shared/constants.shared.dart';
 import 'package:intl/intl.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class Notices extends StatefulWidget {
   const Notices({Key? key}) : super(key: key);
@@ -15,7 +16,7 @@ class _NoticesState extends State<Notices> {
   final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance
       .collection('driverNotices')
       .orderBy('createdAt', descending: true)
-      .limit(3)
+      .limit(2)
       .snapshots();
 
   @override
@@ -43,11 +44,23 @@ class _NoticesState extends State<Notices> {
             return ListTile(
               visualDensity: VisualDensity.compact,
               dense: true,
-              title: Text(
-                data['title'],
-                style: TextStyle(color: kThemeColor),
+              title: AnimatedTextKit(
+                repeatForever: true,
+                pause: Duration(milliseconds: 0),
+                animatedTexts: [
+                  FadeAnimatedText(data['title'],
+                      textStyle: TextStyle(color: kThemeColor),
+                      duration: Duration(milliseconds: 1200))
+                ],
               ),
-              subtitle: Text(data['body']),
+              subtitle: AnimatedTextKit(
+                repeatForever: true,
+                pause: Duration(milliseconds: 1),
+                animatedTexts: [
+                  FadeAnimatedText(data['body'],
+                      duration: Duration(milliseconds: 1200))
+                ],
+              ),
               trailing: Text(DateFormat.MMMd()
                   .add_Hm()
                   .format(data['createdAt'].toDate())),
