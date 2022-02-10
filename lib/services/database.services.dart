@@ -42,20 +42,26 @@ class Database {
   Future createBidding(
       {required int price,
       required String remarks,
-      required String bookingId}) async {
+      required String bookingId,
+      required String icon}) async {
     try {
-      await FirebaseFirestore.instance.collection('biddings').add({
+      Map<String, dynamic> newBid = {
         'driverId': GetStorage().read('driverId'),
         'bookingId': bookingId,
         'amount': (2.5 / 100) * price + price,
         'remarks': remarks,
-        'bookingStatus': 'Pending'
-      });
+        'bookingStatus': 'Pending',
+        'createdAt': DateTime.now(),
+        'icon': icon
+      };
+
+      await FirebaseFirestore.instance.collection('biddings').add(newBid);
+
       await FirebaseFirestore.instance
           .collection('drivers')
           .doc(GetStorage().read('driverId'))
           .set({
-        'myBiddings': FieldValue.arrayUnion([bookingId])
+        'myBiddings': FieldValue.arrayUnion([bookingId]),
       }, SetOptions(merge: true));
       return 'Success';
     } catch (e) {

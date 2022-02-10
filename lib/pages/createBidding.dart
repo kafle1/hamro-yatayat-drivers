@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:yatayat_drivers_app/components/myButton.dart';
 import 'package:yatayat_drivers_app/services/database.services.dart';
 import 'package:yatayat_drivers_app/shared/constants.shared.dart';
@@ -146,7 +148,27 @@ class _CreateBiddingState extends State<CreateBidding> {
                                             price: int.parse(
                                                 _priceController.text),
                                             remarks: _remarksController.text,
-                                            bookingId: data['id']);
+                                            bookingId: data['id'],
+                                            icon: data['icon']);
+
+                                        //Store driver details in local storage
+                                        DocumentSnapshot documentSnapshot =
+                                            await FirebaseFirestore.instance
+                                                .collection('drivers')
+                                                .doc(GetStorage()
+                                                    .read('driverId'))
+                                                .get();
+
+                                        if (documentSnapshot.exists) {
+                                          dynamic doc = documentSnapshot.data();
+
+                                          await GetStorage().write(
+                                              'driverPendingAmount',
+                                              doc['pendingAmount']);
+                                          await GetStorage().write(
+                                              'driverBiddings',
+                                              doc['myBiddings']);
+                                        }
 
                                         setState(() {
                                           showSpinner = false;

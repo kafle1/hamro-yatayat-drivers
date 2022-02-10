@@ -65,9 +65,12 @@ class _HomeState extends State<Home> {
                 'Bidding History (मेरो बोलीहरु):',
                 style: kTitleTextStyle,
               ),
-              BiddingHistoryCards(),
               SizedBox(
                 height: 10,
+              ),
+              BiddingHistoryCard(),
+              SizedBox(
+                height: 15,
               ),
               Text(
                 'Notices (सुचनाहरु):',
