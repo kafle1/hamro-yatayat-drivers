@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:yatayat_drivers_app/components/myButton.dart';
 import 'package:yatayat_drivers_app/pages/feedback.page.dart';
+import 'package:yatayat_drivers_app/pages/payment.page.dart';
 import 'package:yatayat_drivers_app/shared/constants.shared.dart';
 
 class Profile extends StatefulWidget {
@@ -21,7 +22,7 @@ class _ProfileState extends State<Profile> {
     String pendingAmount = data['pendingAmount'].toString();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: Text('Profile (प्रोफाइल)'),
         backgroundColor: kThemeColor,
       ),
       body: SingleChildScrollView(
@@ -36,7 +37,7 @@ class _ProfileState extends State<Profile> {
                   icon: Icons.payments,
                   onClick: () {
                     if (pendingAmount != 0) {
-                      // Navigator.pushNamed(context, PaymentMethods.id);
+                      Navigator.pushNamed(context, PaymentMethod.id);
                     } else {
                       showDialog(
                           context: context,
@@ -62,7 +63,7 @@ class _ProfileState extends State<Profile> {
                 height: 10,
               ),
               Text(
-                'Your Details: ',
+                'Your Details (तपाईंको विवरणहरू) : ',
                 style: kTitleTextStyle,
               ),
               SizedBox(
@@ -191,7 +192,10 @@ class _ProfileState extends State<Profile> {
                   title: 'Edit Details (विवरणहरू सच्याउनुहोस्)',
                   icon: Icons.edit,
                   onClick: () {
-                    Navigator.popAndPushNamed(context, FeedbackContact.id);
+                    Navigator.popAndPushNamed(
+                      context,
+                      FeedbackContact.id,
+                    );
                   },
                   color: kThemeColor)
             ],

@@ -6,11 +6,11 @@ import 'package:yatayat_drivers_app/components/availableBiddings.dart';
 import 'package:yatayat_drivers_app/components/biddingHistoyCards.dart';
 import 'package:yatayat_drivers_app/components/notices.dart';
 import 'package:yatayat_drivers_app/pages/feedback.page.dart';
+import 'package:yatayat_drivers_app/pages/payment.page.dart';
 import 'package:yatayat_drivers_app/pages/profile.page.dart';
 import 'package:yatayat_drivers_app/pages/signin.page.dart';
 import 'package:yatayat_drivers_app/pages/webview.page.dart';
 import 'package:yatayat_drivers_app/shared/constants.shared.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -46,8 +46,10 @@ class _HomeState extends State<Home> {
                 ),
                 onPressed: () {
                   Navigator.pop(context);
-                  Navigator.pushNamed(context, ShowWebsite.id,
-                      arguments: 'https://yatayat.netlify.app/pending-due');
+                  Navigator.pushNamed(
+                    context,
+                    PaymentMethod.id,
+                  );
                 },
                 child: Text(
                   'Pay Now (अहिले तिर्नुहोस्)',
@@ -76,68 +78,72 @@ class _HomeState extends State<Home> {
   }
 
   final data = GetStorage();
+
   //Handle spinner event
   bool showSpinner = false;
+
   @override
   Widget build(BuildContext context) {
-    //Get the current driver's driver is from local storage
+    //Get the current driver's driverId from local storage
     final driverId = data.read('driverId');
 
-    return showSpinner
-        ? CircularProgressIndicator(
-            backgroundColor: Colors.white,
-            color: kThemeColor,
-          )
-        : Scaffold(
-            appBar: AppBar(
-              title: Text('Hamro Yatayat'),
-              backgroundColor: kThemeColor,
-              actions: [
-                IconButton(
-                  onPressed: () async {
-                    setState(() {
-                      showSpinner = true;
-                    });
-                    //Get driver details from firebase
-                    FirebaseFirestore.instance
-                        .collection('drivers')
-                        .doc(driverId)
-                        .get()
-                        .then((DocumentSnapshot documentSnapshot) {
-                      //Stop the spinner
-                      setState(() {
-                        showSpinner = false;
-                      });
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Hamro Yatayat'),
+        backgroundColor: kThemeColor,
+        actions: [
+          IconButton(
+            onPressed: () async {
+              setState(() {
+                showSpinner = true;
+              });
+              //Get driver details from firebase
+              FirebaseFirestore.instance
+                  .collection('drivers')
+                  .doc(driverId)
+                  .get()
+                  .then((DocumentSnapshot documentSnapshot) {
+                //Stop the spinner
+                setState(() {
+                  showSpinner = false;
+                });
 
-                      //Open drivers profile page passing the data
-                      Navigator.pushNamed(context, Profile.id,
-                          arguments: documentSnapshot.data());
-                    });
-                  },
-                  icon: Icon(Icons.person),
-                ),
-                IconButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, FeedbackContact.id);
-                  },
-                  icon: Icon(Icons.feedback),
-                ),
-                IconButton(
-                  onPressed: () async {
-                    //Remove cache from db
-                    data.remove('driverId');
+                //Open drivers profile page passing the data
+                Navigator.pushNamed(context, Profile.id,
+                    arguments: documentSnapshot.data());
+              });
+            },
+            icon: Icon(Icons.person),
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, FeedbackContact.id);
+            },
+            icon: Icon(Icons.feedback),
+          ),
+          IconButton(
+            onPressed: () async {
+              //Remove cache from db
+              data.remove('driverId');
 
-                    //Signout the user
-                    await FirebaseAuth.instance.signOut();
+              //Signout the user
+              await FirebaseAuth.instance.signOut();
 
-                    //Open signin page
-                    Navigator.popAndPushNamed(context, Signin.id);
-                  },
-                  icon: Icon(Icons.logout),
-                ),
-              ],
-            ),
-            body: Padding(
+              //Open signin page
+              Navigator.popAndPushNamed(context, Signin.id);
+            },
+            icon: Icon(Icons.logout),
+          ),
+        ],
+      ),
+      body: showSpinner
+          ? Center(
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.white,
+                color: kThemeColor,
+              ),
+            )
+          : Padding(
               padding: const EdgeInsets.all(10.0),
               child: SingleChildScrollView(
                 child: Column(
@@ -174,6 +180,6 @@ class _HomeState extends State<Home> {
                 ),
               ),
             ),
-          );
+    );
   }
 }

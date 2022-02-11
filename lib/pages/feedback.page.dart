@@ -21,6 +21,7 @@ class _FeedbackContactState extends State<FeedbackContact> {
 
   String? _subjectError;
   String? _messageError;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
