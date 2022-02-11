@@ -6,6 +6,7 @@ import 'package:yatayat_drivers_app/components/availableBiddings.dart';
 import 'package:yatayat_drivers_app/components/biddingHistoyCards.dart';
 import 'package:yatayat_drivers_app/components/notices.dart';
 import 'package:yatayat_drivers_app/pages/feedback.page.dart';
+import 'package:yatayat_drivers_app/pages/profile.page.dart';
 import 'package:yatayat_drivers_app/pages/signin.page.dart';
 import 'package:yatayat_drivers_app/pages/webview.page.dart';
 import 'package:yatayat_drivers_app/shared/constants.shared.dart';
@@ -33,6 +34,7 @@ class _HomeState extends State<Home> {
       Map? data = documentSnapshot.data() as Map;
 
       if (data['pendingAmount'] > 0) {
+        GetStorage().write('driverPendingAmount', data['pendingAmount']);
         showDialog(
           context: context,
           builder: (ctxt) => AlertDialog(
@@ -74,79 +76,104 @@ class _HomeState extends State<Home> {
   }
 
   final data = GetStorage();
+  //Handle spinner event
+  bool showSpinner = false;
   @override
   Widget build(BuildContext context) {
+    //Get the current driver's driver is from local storage
     final driverId = data.read('driverId');
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Hamro Yatayat'),
-        backgroundColor: kThemeColor,
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, ShowWebsite.id,
-                  arguments: 'https://yatayat-drivers.netlify.app/$driverId');
-            },
-            icon: Icon(Icons.person),
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, FeedbackContact.id);
-            },
-            icon: Icon(Icons.feedback),
-          ),
-          IconButton(
-            onPressed: () async {
-              //Remove cache from db
-              data.remove('driverId');
 
-              //Signout the user
-              await FirebaseAuth.instance.signOut();
+    return showSpinner
+        ? CircularProgressIndicator(
+            backgroundColor: Colors.white,
+            color: kThemeColor,
+          )
+        : Scaffold(
+            appBar: AppBar(
+              title: Text('Hamro Yatayat'),
+              backgroundColor: kThemeColor,
+              actions: [
+                IconButton(
+                  onPressed: () async {
+                    setState(() {
+                      showSpinner = true;
+                    });
+                    //Get driver details from firebase
+                    FirebaseFirestore.instance
+                        .collection('drivers')
+                        .doc(driverId)
+                        .get()
+                        .then((DocumentSnapshot documentSnapshot) {
+                      //Stop the spinner
+                      setState(() {
+                        showSpinner = false;
+                      });
 
-              //Open signi page
-              Navigator.popAndPushNamed(context, Signin.id);
-            },
-            icon: Icon(Icons.logout),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(
-                'Bidding History (मेरो बोलीहरु):',
-                style: kTitleTextStyle,
+                      //Open drivers profile page passing the data
+                      Navigator.pushNamed(context, Profile.id,
+                          arguments: documentSnapshot.data());
+                    });
+                  },
+                  icon: Icon(Icons.person),
+                ),
+                IconButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, FeedbackContact.id);
+                  },
+                  icon: Icon(Icons.feedback),
+                ),
+                IconButton(
+                  onPressed: () async {
+                    //Remove cache from db
+                    data.remove('driverId');
+
+                    //Signout the user
+                    await FirebaseAuth.instance.signOut();
+
+                    //Open signin page
+                    Navigator.popAndPushNamed(context, Signin.id);
+                  },
+                  icon: Icon(Icons.logout),
+                ),
+              ],
+            ),
+            body: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text(
+                      'Bidding History (मेरो बोलीहरु):',
+                      style: kTitleTextStyle,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    BiddingHistoryCard(),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Text(
+                      'Notices (सुचनाहरु):',
+                      style: kTitleTextStyle,
+                    ),
+                    Notices(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      'Available Bookings (उपलब्ध बुकिङ):',
+                      style: kTitleTextStyle,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    ShowAvailableBiddings()
+                  ],
+                ),
               ),
-              SizedBox(
-                height: 10,
-              ),
-              BiddingHistoryCard(),
-              SizedBox(
-                height: 15,
-              ),
-              Text(
-                'Notices (सुचनाहरु):',
-                style: kTitleTextStyle,
-              ),
-              Notices(),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                'Available Bookings (उपलब्ध बुकिङ):',
-                style: kTitleTextStyle,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              ShowAvailableBiddings()
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          );
   }
 }

@@ -4,6 +4,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:yatayat_drivers_app/pages/createBidding.dart';
 import 'package:yatayat_drivers_app/pages/feedback.page.dart';
 import 'package:yatayat_drivers_app/pages/home.page.dart';
+import 'package:yatayat_drivers_app/pages/profile.page.dart';
 import 'package:yatayat_drivers_app/pages/signin.page.dart';
 import 'package:yatayat_drivers_app/pages/webview.page.dart';
 import 'package:yatayat_drivers_app/shared/constants.shared.dart';
@@ -42,6 +43,7 @@ class _YatayatDriversState extends State<YatayatDrivers> {
         Signin.id: (context) => Signin(),
         FeedbackContact.id: (context) => FeedbackContact(),
         CreateBidding.id: (context) => CreateBidding(),
+        Profile.id: (context) => Profile(),
       },
       debugShowCheckedModeBanner: false,
     );

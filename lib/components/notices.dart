@@ -48,17 +48,21 @@ class _NoticesState extends State<Notices> {
                 repeatForever: true,
                 pause: Duration(milliseconds: 0),
                 animatedTexts: [
-                  FadeAnimatedText(data['title'],
-                      textStyle: TextStyle(color: kThemeColor),
-                      duration: Duration(milliseconds: 1200))
+                  FadeAnimatedText(
+                    data['title'],
+                    textStyle: TextStyle(color: kThemeColor),
+                    duration: Duration(milliseconds: 1200),
+                  )
                 ],
               ),
               subtitle: AnimatedTextKit(
                 repeatForever: true,
                 pause: Duration(milliseconds: 1),
                 animatedTexts: [
-                  FadeAnimatedText(data['body'],
-                      duration: Duration(milliseconds: 1200))
+                  FadeAnimatedText(
+                    data['body'],
+                    duration: Duration(milliseconds: 1200),
+                  )
                 ],
               ),
               trailing: Text(DateFormat.MMMd()

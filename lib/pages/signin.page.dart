@@ -17,7 +17,7 @@ class Signin extends StatefulWidget {
 class _SigninState extends State<Signin> {
   final TextEditingController _driverIdController = TextEditingController();
 
-  var _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   final data = GetStorage();
   bool showSpinner = false;
@@ -28,6 +28,7 @@ class _SigninState extends State<Signin> {
     return showSpinner
         ? Center(
             child: CircularProgressIndicator(
+              backgroundColor: Colors.white,
               color: kThemeColor,
             ),
           )

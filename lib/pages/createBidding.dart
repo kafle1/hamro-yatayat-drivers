@@ -142,6 +142,7 @@ class _CreateBiddingState extends State<CreateBidding> {
                                         Navigator.pop(ctxt);
                                         setState(() {
                                           showSpinner = true;
+                                        
                                         });
 
                                         await Database().createBidding(

@@ -37,7 +37,7 @@ class _BiddingHistoryCardState extends State<BiddingHistoryCard> {
           return Text('No data found');
         }
         return SizedBox(
-          height: 110,
+          height: 100,
           child: ListView(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
@@ -77,7 +77,7 @@ class BidCard extends StatelessWidget {
           showDialog(
             context: context,
             builder: (ctxt) => AlertDialog(
-              title: Text('Please wait !'),
+              title: Text('Please wait ! कृपया पर्खनुहोस् !'),
               actions: [
                 TextButton(
                   style: TextButton.styleFrom(
@@ -93,7 +93,7 @@ class BidCard extends StatelessWidget {
                 ),
               ],
               content: Text(
-                  'Your bidding status is ${data['bookingStatus']}. You will get all the details of the booking and customer once the customer confirms your bid.'),
+                  'Your bidding status is ${data['bookingStatus']}. You will get all the details of the booking and customer once the customer confirms your bid. \n\nकृपया पर्खनुहोस् ! ग्राहकले तपाईंको बिड पुष्टि गरेपछि तपाईंले बुकिङ र ग्राहकको सबै विवरणहरू प्राप्त गर्नुहुनेछ।'),
             ),
           );
         }
@@ -104,8 +104,8 @@ class BidCard extends StatelessWidget {
           color: Colors.grey[300],
         ),
         margin: EdgeInsets.only(right: 15),
-        width: 110,
-        height: 110,
+        width: 100,
+        height: 100,
         child: Padding(
           padding: const EdgeInsets.all(5.0),
           child: Column(
@@ -118,7 +118,7 @@ class BidCard extends StatelessWidget {
               ),
               Image(
                 image: AssetImage('./assets/icons/${data['icon']}.png'),
-                height: 50,
+                height: 35,
               ),
               Text(
                 'Rs. ${data['amount']}',

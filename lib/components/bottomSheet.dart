@@ -105,7 +105,7 @@ class GetBiddingDetails extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: const [
                       Text(
-                        'Customer Name (ग्राहकको नाम):',
+                        'Name (ग्राहकको नाम):',
                         style: kDetailsLabelStyle,
                       ),
                       Text(
@@ -125,7 +125,7 @@ class GetBiddingDetails extends StatelessWidget {
                         style: kDetailsLabelStyle,
                       ),
                       Text(
-                        'Destination Location (गन्तव्य स्थान):',
+                        'Destination (गन्तव्य स्थान):',
                         style: kDetailsLabelStyle,
                       ),
                       Text(
@@ -137,7 +137,7 @@ class GetBiddingDetails extends StatelessWidget {
                         style: kDetailsLabelStyle,
                       ),
                       Text(
-                        'Phone Number (फोन नंबर):',
+                        'Phone No. (फोन नंबर):',
                         style: kDetailsLabelStyle,
                       ),
                       Text(
@@ -149,11 +149,11 @@ class GetBiddingDetails extends StatelessWidget {
                         style: kDetailsLabelStyle,
                       ),
                       Text(
-                        'Driver\'s Number (ड्राइभरको नम्बर):',
+                        'Driver\'s No. (ड्राइभरको नम्बर):',
                         style: kDetailsLabelStyle,
                       ),
                       Text(
-                        'Vehicle Number (गाडी नम्बर):',
+                        'Vehicle No. (गाडी नम्बर):',
                         style: kDetailsLabelStyle,
                       ),
                       Text(
