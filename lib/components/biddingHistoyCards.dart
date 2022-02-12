@@ -103,7 +103,7 @@ class BidCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(5),
           color: Colors.grey[300],
         ),
-        margin: EdgeInsets.only(right: 15),
+        margin: EdgeInsets.only(right: 10),
         width: 100,
         height: 100,
         child: Padding(

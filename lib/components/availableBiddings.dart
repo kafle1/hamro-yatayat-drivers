@@ -70,7 +70,7 @@ class _ShowAvailableBiddingsState extends State<ShowAvailableBiddings> {
                 image: AssetImage('./assets/icons/${data['icon']}.png'),
               ),
               subtitle: Text(
-                  'From ${data['pickupLocation']} to ${data['destinationLocation']} (${data['noOfTrips'] == 1 ? 'One Way' : 'Two Way'}) \nPickup Date: ${data['pickupDate']} \nBooking Days: ${data['noOfDays']} days'),
+                  'From ${data['pickupLocation']} to ${data['destinationLocation']} (${data['noOfTrips'] == '1' ? 'One Way' : 'Two Way'}) \nPickup Date: ${data['pickupDate']} \nBooking Days: ${data['noOfDays']} days'),
             );
           }).toList(),
         );

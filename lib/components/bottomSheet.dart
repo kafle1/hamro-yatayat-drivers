@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:yatayat_drivers_app/components/myButton.dart';
 import 'package:yatayat_drivers_app/shared/constants.shared.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class buildSheet extends StatefulWidget {
   final Map data;
@@ -16,8 +18,8 @@ class _buildSheetState extends State<buildSheet> {
     Map biddingDetails = widget.data;
     return makeDismissible(
       child: DraggableScrollableSheet(
-        minChildSize: 0.3,
-        initialChildSize: 0.6,
+        minChildSize: 0.4,
+        initialChildSize: 0.7,
         builder: (_, controller) => Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -160,6 +162,10 @@ class GetBiddingDetails extends StatelessWidget {
                         'Booking Status (बुकिंग स्थिति):',
                         style: kDetailsLabelStyle,
                       ),
+                      Text(
+                        'Payment Status (भुक्तानी स्थिति):',
+                        style: kDetailsLabelStyle,
+                      ),
                     ],
                   ),
                   Column(
@@ -221,10 +227,24 @@ class GetBiddingDetails extends StatelessWidget {
                         data['status'],
                         style: TextStyle(height: 1.36),
                       ),
+                      Text(
+                        data['paymentStatus'],
+                        style: TextStyle(height: 1.36),
+                      ),
                     ],
                   )
                 ],
               ),
+              SizedBox(
+                height: 15,
+              ),
+              MyButton(
+                  title: 'Call Customer',
+                  icon: Icons.phone,
+                  onClick: () {
+                    launch("tel://${data['phoneNumber']}");
+                  },
+                  color: Colors.green[900])
             ],
           );
         }
