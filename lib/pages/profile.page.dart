@@ -33,11 +33,21 @@ class _ProfileState extends State<Profile> {
             children: [
               MyButton(
                   title:
-                      'Pending Amount (बाँकी रहेको रकम) : Rs. $pendingAmount',
+                      'Pending Amount (बाँकी रहेको रकम) : Rs. ${pendingAmount == 'null' ? '0' : pendingAmount}',
                   icon: Icons.payments,
                   onClick: () {
-                    if (pendingAmount != 0) {
-                      Navigator.pushNamed(context, PaymentMethod.id);
+                    if (pendingAmount != 'null') {
+                      if (pendingAmount != '0') {
+                        Navigator.pushNamed(context, PaymentMethod.id);
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                                  title: Text('All Clear'),
+                                  content: Text(
+                                      'You don\'t have pending amount left !'),
+                                ));
+                      }
                     } else {
                       showDialog(
                           context: context,
@@ -48,9 +58,9 @@ class _ProfileState extends State<Profile> {
                               ));
                     }
                   },
-                  color: pendingAmount != '0'
-                      ? Colors.red[900]
-                      : Colors.green[900]),
+                  color: pendingAmount == '0' || pendingAmount == 'null'
+                      ? Colors.green[900]
+                      : Colors.red[900]),
               SizedBox(
                 height: 10,
               ),

@@ -43,11 +43,14 @@ class _CreateBiddingState extends State<CreateBidding> {
               padding: const EdgeInsets.all(10.0),
               child: SingleChildScrollView(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Create Bidding for this booking: \nयस बुकिंगको लागि बिडिङ गर्नुहोस्:',
-                      style: kTitleTextStyle,
+                      'Enter your final bidding price for this booking: \nयस बुकिंगको लागि अन्तिम मूल्य राख्नुहोस्:',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
                     ListTile(
                       title: Text(data['vehicleType']),
@@ -142,7 +145,6 @@ class _CreateBiddingState extends State<CreateBidding> {
                                         Navigator.pop(ctxt);
                                         setState(() {
                                           showSpinner = true;
-                                        
                                         });
 
                                         await Database().createBidding(
