@@ -51,8 +51,9 @@ class _ShowAvailableBiddingsState extends State<ShowAvailableBiddings> {
 
             return ListTile(
               //check if user has already added placed booking for this order
-              enabled:
-                  !GetStorage().read('driverBiddings').contains(data['id']),
+              enabled: GetStorage().read('driverBiddings') == null
+                  ? true
+                  : !GetStorage().read('driverBiddings').contains(data['id']),
               title: Text(data['vehicleType']),
               isThreeLine: true,
               onTap: () async {

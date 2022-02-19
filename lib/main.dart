@@ -8,6 +8,7 @@ import 'package:yatayat_drivers_app/pages/payment.page.dart';
 import 'package:yatayat_drivers_app/pages/profile.page.dart';
 import 'package:yatayat_drivers_app/pages/signin.page.dart';
 import 'package:yatayat_drivers_app/pages/webview.page.dart';
+import 'package:yatayat_drivers_app/services/notification.services.dart';
 import 'package:yatayat_drivers_app/shared/constants.shared.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -30,6 +31,8 @@ class _YatayatDriversState extends State<YatayatDrivers> {
   @override
   void initState() {
     super.initState();
+    final firebaseMessaging = FCM();
+    firebaseMessaging.setNotifications();
   }
 
   @override

@@ -109,7 +109,7 @@ class _SigninState extends State<Signin> {
                                 //Get the driver id entered by the user
                                 String driverId = _driverIdController.text;
 
-                                //Create anonymous signin
+                                //Create anonymous signin and save in local db
                                 await FirebaseAuth.instance.signInAnonymously();
 
                                 //Store driver details in local storage

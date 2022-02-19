@@ -41,21 +41,23 @@ class _ProfileState extends State<Profile> {
                         Navigator.pushNamed(context, PaymentMethod.id);
                       } else {
                         showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                                  title: Text('All Clear'),
-                                  content: Text(
-                                      'You don\'t have pending amount left !'),
-                                ));
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text('All Clear'),
+                            content:
+                                Text('You don\'t have pending amount left !'),
+                          ),
+                        );
                       }
                     } else {
                       showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                                title: Text('All Clear'),
-                                content: Text(
-                                    'You don\'t have pending amount left !'),
-                              ));
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text('All Clear'),
+                          content:
+                              Text('You don\'t have pending amount left !'),
+                        ),
+                      );
                     }
                   },
                   color: pendingAmount == '0' || pendingAmount == 'null'

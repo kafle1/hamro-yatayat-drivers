@@ -45,7 +45,7 @@ class _CreateBiddingState extends State<CreateBidding> {
                 child: Column(
                   children: [
                     Text(
-                      'Enter your final bidding price for this booking: \nयस बुकिंगको लागि अन्तिम मूल्य राख्नुहोस्:',
+                      'Enter your final price for this booking: \nयस रिजर्भेसनको लागि आफ्नो निउनतम मूल्य राख्नुहोस्:',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,

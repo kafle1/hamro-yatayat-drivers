@@ -17,7 +17,7 @@ class _BiddingHistoryCardState extends State<BiddingHistoryCard> {
   final Stream<QuerySnapshot> _biddingStream = FirebaseFirestore.instance
       .collection('biddings')
       .where('driverId', isEqualTo: GetStorage().read('driverId'))
-      .orderBy('createdAt', descending: true)
+      .orderBy('bookingStatus')
       .snapshots();
 
   @override
@@ -100,9 +100,10 @@ class BidCard extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          color: Colors.grey[300],
-        ),
+            borderRadius: BorderRadius.circular(5),
+            color: data['bookingStatus'] == 'Pending'
+                ? Colors.orange[200]
+                : Colors.green[200]),
         margin: EdgeInsets.only(right: 10),
         width: 100,
         height: 100,
@@ -114,7 +115,9 @@ class BidCard extends StatelessWidget {
             children: [
               Text(
                 DateFormat.MMMd().add_Hm().format(data['createdAt'].toDate()),
-                style: TextStyle(fontSize: 11),
+                style: TextStyle(
+                  fontSize: 11,
+                ),
               ),
               Image(
                 image: AssetImage('./assets/icons/${data['icon']}.png'),
@@ -122,7 +125,8 @@ class BidCard extends StatelessWidget {
               ),
               Text(
                 'Rs. ${data['amount']}',
-                style: TextStyle(color: kThemeColor),
+                style:
+                    TextStyle(color: kThemeColor, fontWeight: FontWeight.bold),
               ),
               Text(
                 '${data['bookingStatus']}',

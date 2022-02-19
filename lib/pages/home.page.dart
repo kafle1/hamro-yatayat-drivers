@@ -34,6 +34,7 @@ class _HomeState extends State<Home> {
       Map? data = documentSnapshot.data() as Map;
 
       GetStorage().write('driverPendingAmount', data['pendingAmount']);
+
       if (data['pendingAmount'] > 0) {
         GetStorage().write('driverPendingAmount', data['pendingAmount']);
         showDialog(
