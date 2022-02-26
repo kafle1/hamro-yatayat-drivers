@@ -9,7 +9,7 @@ import 'package:yatayat_drivers_app/pages/feedback.page.dart';
 import 'package:yatayat_drivers_app/pages/payment.page.dart';
 import 'package:yatayat_drivers_app/pages/profile.page.dart';
 import 'package:yatayat_drivers_app/pages/signin.page.dart';
-import 'package:yatayat_drivers_app/pages/webview.page.dart';
+import 'package:yatayat_drivers_app/services/database.services.dart';
 import 'package:yatayat_drivers_app/shared/constants.shared.dart';
 
 class Home extends StatefulWidget {
@@ -72,7 +72,7 @@ class _HomeState extends State<Home> {
               ),
             ],
             content: Text(
-                'You have pending amount Rs. ${data['pendingAmount']} to pay to Yatayat, which is from your previous booking. Please pay it on time so that you can place your bid for next booking. Thank you ! \n\nतपाईंको रकम रु.${data['pendingAmount']} यातायातलाई तिर्न बाँकी छ , जुन तपाइँको अघिल्लो बुकिङबाट हो। कृपया यसलाई समयमै तिर्नुहोस् ताकि तपाइँ अर्को बुकिङको लागि आफ्नो बोली राख्न सक्नुहुन्छ। धन्यवाद !'),
+                'You have pending amount Rs. ${data['pendingAmount']} to pay to Hamro Yatayat, which is from your previous booking. Please pay it on time so that you can place your bid for next booking. Thank you ! \n\nतपाईंको रकम रु.${data['pendingAmount']} हाम्रो यातायातलाई तिर्न बाँकी छ , जुन तपाइँको अघिल्लो बुकिङबाट हो। कृपया यसलाई समयमै तिर्नुहोस् ताकि तपाइँ अर्को बुकिङको लागि आफ्नो बोली राख्न सक्नुहुन्छ। धन्यवाद !'),
           ),
         );
       }
@@ -150,7 +150,19 @@ class _HomeState extends State<Home> {
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
+                    Container(
+                      height: 180,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.white,
+                        boxShadow: const [kBoxShadow],
+                      ),
+                      child: Database().createCrousel(),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
                     Text(
                       'Bidding History (मेरो बोलीहरु):',
                       style: kTitleTextStyle,

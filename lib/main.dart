@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:yatayat_drivers_app/pages/createBidding.dart';
@@ -7,7 +6,6 @@ import 'package:yatayat_drivers_app/pages/home.page.dart';
 import 'package:yatayat_drivers_app/pages/payment.page.dart';
 import 'package:yatayat_drivers_app/pages/profile.page.dart';
 import 'package:yatayat_drivers_app/pages/signin.page.dart';
-import 'package:yatayat_drivers_app/pages/webview.page.dart';
 import 'package:yatayat_drivers_app/services/notification.services.dart';
 import 'package:yatayat_drivers_app/shared/constants.shared.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -43,7 +41,6 @@ class _YatayatDriversState extends State<YatayatDrivers> {
       initialRoute: db.read('driverId') != null ? Home.id : Signin.id,
       routes: {
         Home.id: (context) => Home(),
-        ShowWebsite.id: (context) => ShowWebsite(),
         Signin.id: (context) => Signin(),
         FeedbackContact.id: (context) => FeedbackContact(),
         CreateBidding.id: (context) => CreateBidding(),

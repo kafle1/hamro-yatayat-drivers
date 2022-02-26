@@ -2,8 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:carousel_pro_nullsafety/carousel_pro_nullsafety.dart';
 
 class Database {
+  final Stream<QuerySnapshot> _imagesStream = FirebaseFirestore.instance
+      .collection('images')
+      .where('isDriverPoster', isEqualTo: true)
+      .snapshots();
+
   //Check if the driver exists in the datbase
   Future driverExists({required String driverId}) async {
     try {
@@ -39,6 +45,38 @@ class Database {
     }
   }
 
+  StreamBuilder<QuerySnapshot<Object?>> createCrousel() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _imagesStream,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Text("");
+        }
+
+        return Carousel(
+          images: snapshot.data!.docs.map((DocumentSnapshot document) {
+            Map<String, dynamic> data =
+                document.data()! as Map<String, dynamic>;
+            return Image.network(
+              data['url'],
+              fit: BoxFit.fill,
+            );
+          }).toList(),
+          dotSize: 5,
+          dotSpacing: 15,
+          indicatorBgPadding: 5,
+          dotColor: Colors.white60,
+          dotBgColor: Colors.transparent,
+        );
+      },
+    );
+  }
+
+//Create new bidding
   Future createBidding(
       {required int price,
       required String remarks,
