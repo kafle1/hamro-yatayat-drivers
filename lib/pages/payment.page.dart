@@ -51,7 +51,7 @@ class _PaymentMethodState extends State<PaymentMethod> {
                 height: 10,
               ),
               Text(
-                'Esewa ID: 9860461944\nAccount Name: Nischal Kafle',
+                'Esewa ID: 9845807600\nAccount Name: Uddav Sigdyal',
                 style: TextStyle(fontSize: 15),
               ),
               SizedBox(
