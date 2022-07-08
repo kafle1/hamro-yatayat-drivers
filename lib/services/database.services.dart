@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:carousel_pro_nullsafety/carousel_pro_nullsafety.dart';
@@ -74,6 +77,55 @@ class Database {
         );
       },
     );
+  }
+
+  //Create a token in db
+  Future createToken({required String uid, required String token}) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('tokens')
+          .doc(uid)
+          .set({'id': uid, 'token': token});
+    } catch (e) {
+      return e;
+    }
+  }
+
+  //Send notification to the customer
+  Future sendBidNotification({required String id}) async {
+    try {
+      var info =
+          await FirebaseFirestore.instance.collection('tokens').doc(id).get();
+      Map<String, dynamic>? token = info.data();
+
+      var headers = {
+        'Content-Type': 'application/json',
+        'Authorization':
+            'key=AAAAbFMLzsw:APA91bHfAEwznjJUX5mY31SlsA0UafLrKI_wdhWH1noQCRSddc_p1KmROT79UdVnf8XWM27-q9vddtTiQYWJ7VH71RgNoezGsNIXu7k8j0OrKWVPJgXl7hWzrFTeErYOZlG70T5BlnZ2 '
+      };
+      var request = http.Request(
+          'POST', Uri.parse('https://fcm.googleapis.com/fcm/send'));
+      request.body = json.encode({
+        "registration_ids": [token!['token']],
+        "notification": {
+          "title": "New Booking Price Updated ! Vehicle Available !",
+          "body":
+              "Someone has placed their bidding for your booking. Check your app to see the price and confirm your booking. कसैले तपाईंको बुकिङको लागि आफ्नो बोली राखेको छ। मूल्य हेर्न र आफ्नो बुकिङ कन्फर्म गर्न आफ्नो एप हेर्नुहोस् |",
+          "sound": "default"
+        }
+      });
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        return await response.stream.bytesToString();
+      } else {
+        return response.reasonPhrase;
+      }
+    } catch (e) {
+      return e;
+    }
   }
 
 //Create new bidding

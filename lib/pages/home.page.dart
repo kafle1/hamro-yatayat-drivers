@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:yatayat_drivers_app/components/availableBiddings.dart';
@@ -23,6 +24,36 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+
+    //save notification token to database
+    if (GetStorage().read('token') == null) {
+      final _firebaseMessaging = FirebaseMessaging.instance;
+      _firebaseMessaging.getToken().then((value) async {
+        FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+        NotificationSettings settings = await messaging.requestPermission(
+          alert: true,
+          announcement: false,
+          badge: true,
+          carPlay: false,
+          criticalAlert: false,
+          provisional: false,
+          sound: true,
+        );
+
+        if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+          print('User granted permission');
+        } else if (settings.authorizationStatus ==
+            AuthorizationStatus.provisional) {
+          print('User granted provisional permission');
+        } else {
+          print('User declined or has not accepted permission');
+        }
+        await Database()
+            .createToken(uid: GetStorage().read('driverId'), token: '$value');
+        GetStorage().write("token", '$value');
+      });
+    }
 
     //Check if driver has pending amount to pay
     //If yes show a popup as a remainder to pay the due amount

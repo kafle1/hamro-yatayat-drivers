@@ -16,6 +16,25 @@ Future<void> onBackgroundMessage(RemoteMessage message) async {
     final notification = message.data['notification'];
   }
   // Or do other work.
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+
+  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+    print('User granted permission');
+  } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+    print('User granted provisional permission');
+  } else {
+    print('User declined or has not accepted permission');
+  }
 }
 
 class FCM {
@@ -26,6 +45,8 @@ class FCM {
   final bodyCtlr = StreamController<String>.broadcast();
 
   setNotifications() {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
     FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
 
     // handle when app in active state

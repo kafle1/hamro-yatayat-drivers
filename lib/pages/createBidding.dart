@@ -154,6 +154,10 @@ class _CreateBiddingState extends State<CreateBidding> {
                                             bookingId: data['id'],
                                             icon: data['icon']);
 
+                                        //send notification
+                                        await Database().sendBidNotification(
+                                            id: data['docId']);
+
                                         //Store driver details in local storage
                                         DocumentSnapshot documentSnapshot =
                                             await FirebaseFirestore.instance
